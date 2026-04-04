@@ -1,9 +1,14 @@
 import random
+from datetime import datetime
+
+# This function analyzes temperature and weather condition n returns advice for the user
 
 def give_advice(temp, condition):
 
+# Convert condition to lowercase to avoid case-sensitivity issues
     condition = condition.lower()
 
+# Check temperature ranges and return appropriate advice
     if temp < 0:
         return "❄️ Freezing weather! Wear heavy warm clothes and stay indoors if possible."
 
@@ -24,9 +29,11 @@ def give_advice(temp, condition):
 
     else:
         return "🔥 Very hot! Stay hydrated, wear light clothes, and avoid too much sun."
-    
+  
+# This function generates a random activity suggestion based on temperature and weather condition  
 def get_random_suggestion(temp, condition):
 
+# Check weather condition and temperature to decide suitable activities
     if condition.lower() == "rainy":
         suggestions = [
             "Stay indoors and watch a movie 🎬",
@@ -56,7 +63,20 @@ def get_random_suggestion(temp, condition):
         ]
 
     return random.choice(suggestions)
-    
+
+# Saves weather data to a text file in a structured format.
+# Includes city, temperature, condition, advice, suggestion,
+# and timestamp for each entry.
+def save_to_file(city, temp, condition, advice, suggestion):
+    with open("weather_report.txt", "a", encoding="utf-8")as file:
+        file.write("\n-------------------------------\n")
+        file.write(f"Date: {datetime.now()}\n")
+        file.write(f"City: {city.title()}\n")
+        file.write(f"Temperature: {temp}°C\n")
+        file.write(f"Condition: {condition.title()}\n")
+        file.write(f"Advice: {advice}\n")
+        file.write(f"Suggestion: {suggestion}\n")
+        file.write("-------------------------------\n")
 
 while True:
     # Ask user for input
@@ -76,6 +96,9 @@ while True:
     # Get suggestion
     suggestion = get_random_suggestion(temperature, condition)
     print(f"Suggestion: {suggestion}")
+    
+    # Save file
+    save_to_file(city, temperature, condition, advice, suggestion)
 
     # Ask user to continue
     choice = input("\nWould you like to check another city? (Y/N): ").strip().upper()
