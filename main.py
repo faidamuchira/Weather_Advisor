@@ -1,11 +1,16 @@
 import random
 from datetime import datetime
 import requests
+import os
+from dotenv import load_dotenv
+
+# Load API key from .env file for security
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
 # This function fetches real-time weather data from OpenWeather API
 # It returns temperature and weather condition for the given city
 def get_weather(city):
-    API_KEY = "a3d5fc96ad4e09e9136a368f75bb1cb6"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
 
 # Error handling for invalid city names and connection issues.
