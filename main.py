@@ -1,8 +1,18 @@
 import random
 from datetime import datetime
+import requests
+
+def get_weather(city):
+    API_KEY = "a3d5fc96ad4e09e9136a368f75bb1cb6"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    temperature = data["main"]["temp"]
+    condition = data["weather"][0]["main"]
+    
+    return temperature, condition
 
 # This function analyzes temperature and weather condition n returns advice for the user
-
 def give_advice(temp, condition):
 
 # Convert condition to lowercase to avoid case-sensitivity issues
@@ -81,8 +91,8 @@ def save_to_file(city, temp, condition, advice, suggestion):
 while True:
     # Ask user for input
     city = input("Please enter the name of the city: ").strip()
-    temperature = float(input("Please enter the temperature in degrees Celsius: "))
-    condition = input("Please enter the weather condition: ").strip()
+    
+    temperature, condition = get_weather(city)
 
     # Display weather info
     print(f"\nWeather in {city}:")
