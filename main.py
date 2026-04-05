@@ -2,11 +2,23 @@ import random
 from datetime import datetime
 import requests
 
+# This function fetches real-time weather data from OpenWeather API
+# It returns temperature and weather condition for the given city
 def get_weather(city):
     API_KEY = "a3d5fc96ad4e09e9136a368f75bb1cb6"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
-    response = requests.get(url)
-    data = response.json()
+
+# Error handling for invalid city names and connection issues.
+    try:
+        response = requests.get(url)
+        data = response.json()
+    except: 
+        print("Error Connecting to weather service.")
+        return None, None
+    if data.get("cod")  != 200:
+        print("City not found. Please try again.")
+        return None, None
+        
     temperature = data["main"]["temp"]
     condition = data["weather"][0]["main"]
     
@@ -89,10 +101,15 @@ def save_to_file(city, temp, condition, advice, suggestion):
         file.write("-------------------------------\n")
 
 while True:
-    # Ask user for input
+    # Ask user for input and validate if it is left empty 
     city = input("Please enter the name of the city: ").strip()
-    
+    if city == "":
+        print("Please enter a valid city name.")
+        continue
+    # Call API to get weather data; if city is invalid, skip this iteration and ask again
     temperature, condition = get_weather(city)
+    if temperature is None:
+        continue
 
     # Display weather info
     print(f"\nWeather in {city}:")
